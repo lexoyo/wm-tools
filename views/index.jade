@@ -15,7 +15,7 @@ block content
       button#logoutBtn Logout
     div.loggedout
       p Login with Facebook
-      <fb:login-button id="loginBtn" scope="public_profile,email,ads_management" onlogin="checkLoginState();">
+      <fb:login-button id="loginBtn" scope="email,manage_pages,publish_pages,pages_messaging,pages_show_list,public_profile,ads_management" onlogin="checkLoginState();">
       </fb:login-button>
   section.loggedin
     fieldset

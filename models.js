@@ -28,9 +28,12 @@ function start() {
   models.User = mongoose.model('User', userSchema);
 
   const flowSchema = mongoose.Schema({
-    userId: String,
-    parentId: String,
     name: String,
+    userId: String,
+    pageId: String,
+    webhookToken: String,
+    parentId: String,
+    paused: Boolean,
   });
   Object.assign(flowSchema.methods, FlowMethods);
   models.Flow = mongoose.model('Flow', flowSchema);

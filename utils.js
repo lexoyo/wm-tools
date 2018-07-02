@@ -1,6 +1,15 @@
 const debug = require('debug')('webmaster-tools:utils');
 
 module.exports = {
+  requiresLogin: function (req, res, next) {
+    const { accessToken, userId, proof } = req.session;
+    if(accessToken && userId && proof) {
+      next();
+    }
+    else {
+      this.sendError(res, 'Need to login');
+    }
+  },
   sendError: function(res, err) {
     debug('Send error', err);
     res.status(500).json({

@@ -9,6 +9,11 @@ window.Api = {
       dataType: 'json',
     });
   },
+  getPages: function(options) {
+    this.get(Object.assign({}, options, {
+      route: 'me/pages',
+    }));
+  },
   getAdAccounts: function(options) {
     this.get(Object.assign({}, options, {
       route: 'ads',

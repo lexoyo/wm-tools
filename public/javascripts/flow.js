@@ -1,9 +1,23 @@
 window.Flow = {
-  create: function(account, {success, error, cancel}) {
-    console.log('create a flow');
+  init: function(pages) {
+    console.log('flow init', pages);
+    this.pages = pages;
+  },
+  create: function(account, options) {
+    console.log('Create a flow', options);
+    this.editOrCreate(account, this.saveNew, options, {
+      parentId: account.id,
+      paused: true,
+    });
+  },
+  edit: function(account, flow, options) {
+    console.log('Edit a flow', flow, options);
+    this.editOrCreate(account, this.save, options, flow);
+  },
+  editOrCreate: function(account, method, {success, error, cancel}, data) {
     this.openEditDialog({
-      data: {},
-      success: data => this.saveNew(account, {
+      data: data,
+      success: data => method(account, {
         data: data,
         success: success,
         error: error,
@@ -14,6 +28,14 @@ window.Flow = {
   saveNew: function(account, {data, success, error}) {
     console.log('saveNew', account, data);
     Api.createFlow(account.id, {
+      data: data,
+      success: response => success(response),
+      error: response => error(response),
+    });
+  },
+  save: function(account, {data, success, error}) {
+    console.log('saveNew', account, data);
+    Api.updateFlow(account.id, {
       data: data,
       success: response => success(response),
       error: response => error(response),
@@ -33,6 +55,12 @@ window.Flow = {
       e.preventDefault();
       this.closeEditDialog();
     }
+    const pageSelect = flowEditDialogEl.querySelector('.pageSelect');
+    pageSelect.innerHTML = this.pages.map(page => `
+      <option value="${ page.id }">${ page.name }</option>
+    `).join('');
+
+    this.setData(data);
     // store for use in closeEditDialog
     this.onclose = {success: success, cancel: cancel};
   },
@@ -51,10 +79,34 @@ window.Flow = {
       }
     }
   },
+  setData(data) {
+    const dataElements = flowEditDialogEl.querySelectorAll('[data-name]');
+    for(idx=0; idx<dataElements.length; idx++) {
+      const el = dataElements[idx];
+      console.log('aaa', el)
+      const name = el.getAttribute('data-name');
+      const type = el.getAttribute('data-type');
+      if(data[name]) {
+        if(type === 'boolean')
+          el.checked = data[name];
+        else
+          el.value = data[name];
+      }
+    }
+  },
   getData() {
     const flowEditDialogEl = document.body.querySelector('#flowEditDialogEl');
-    return {
-      name: flowEditDialogEl.querySelector('.nameEl').value,
+    const dataElements = flowEditDialogEl.querySelectorAll('[data-name]');
+    const data = {};
+    for(idx=0; idx<dataElements.length; idx++) {
+      const el = dataElements[idx];
+      const type = el.getAttribute('data-type');
+      const name = el.getAttribute('data-name');
+      if(type === 'boolean')
+        data[name] = el.checked;
+      else if(el.value)
+        data[name] = el.value;
     }
+    return data;
   }
 }

@@ -1,13 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const assert = require('assert');
+const mongoose = require('mongoose');
+const crypto = require('crypto');
 const debug = require('debug')('webmaster-tools:flows');
+
 const utils = require('../utils');
 
 router.get('/', function(req, res, next) {
   debug('router path GET /', req.query);
-  const { accessToken, userId, proof } = req.session;
+  const { accessToken, userId } = req.session;
+  const { parentId } = req.query;
   const { Flow } = req.app.get('models');
-  Flow.find({userId: userId, parentId: req.query.parentId}, (err, docs) => {
+  assert(!!userId, 'Missing userId');
+  assert(!!parentId, 'Missing parentId');
+  Flow.find({userId: userId, parentId: parentId}, (err, docs) => {
+    debug('wtf!!!!!', err, docs);
     if(err) utils.sendKo(res, err);
     else utils.sendOk(res, docs);
   });
@@ -15,10 +23,14 @@ router.get('/', function(req, res, next) {
 router.post('/:flowId', function(req, res, next) {
   const { flowId } = req.params;
   const { name } = req.body;
-  const { accessToken, userId, proof } = req.session;
+  const { accessToken, userId } = req.session;
   const { Flow } = req.app.get('models');
+  assert(!!userId, 'Missing userId');
+  assert(!!flowId, 'Missing flowId');
+  debug('before findOneAndUpdate', userId, flowId);
+  debug('===>', mongoose.Types.ObjectId(flowId));
   Flow.findOneAndUpdate(
-    {userId: userId, flowId: flowId},
+    {userId: userId, _id: mongoose.Types.ObjectId(flowId)},
     {
       $set: {
         name: name,
@@ -34,11 +46,13 @@ router.post('/:flowId', function(req, res, next) {
 });
 router.delete('/:flowId', function(req, res, next) {
   const { flowId } = req.params;
-  const { accessToken, userId, proof } = req.session;
+  const { accessToken, userId } = req.session;
   const { Flow } = req.app.get('models');
   debug('findOneAndDelete', userId, flowId);
+  assert(!!userId, 'Missing userId');
+  assert(!!flowId, 'Missing flowId');
   Flow.findOneAndDelete(
-    {userId: userId, _id: flowId},
+    {userId: userId, _id: mongoose.Types.ObjectId(flowId)},
     (err, doc) => {
       debug('router DELETE ', err, doc);
       if(err) utils.sendKo(res, err);
@@ -50,16 +64,19 @@ router.delete('/:flowId', function(req, res, next) {
 router.post('/', function(req, res, next) {
   debug('router path POST /', req.params);
   const { parentId, name } = req.body;
-  const { accessToken, userId, proof } = req.session;
+  const { accessToken, userId } = req.session;
   const { Flow } = req.app.get('models');
+  assert(!!userId, 'Missing userId');
+  assert(!!parentId, 'Missing parentId');
   Flow.create(
     {
       userId: userId,
       parentId: parentId,
       name: name,
+      webhookToken: crypto.randomBytes(16).toString('hex'),
     },
     (err, doc) => {
-      debug('router POS ')
+      debug('router POST ')
       if(err) utils.sendKo(res, err);
       else utils.sendOk(res, doc);
     }

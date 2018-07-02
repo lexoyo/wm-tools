@@ -9,6 +9,9 @@ const indexRouter = require('./routes/index');
 const meRouter = require('./routes/me');
 const adsRouter = require('./routes/ads');
 const flowsRouter = require('./routes/flows');
+const webhooksRouter = require('./routes/webhooks');
+
+const { requiresLogin } = require('./utils');
 
 const FB = require('./fb');
 const models = require('./models');
@@ -36,9 +39,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// public routes
 app.use('/', indexRouter);
 app.use('/me', meRouter);
+app.use('/webhooks', webhooksRouter);
+
+// requires login
+app.use('/ads', requiresLogin);
 app.use('/ads', adsRouter);
+app.use('/flows', requiresLogin);
 app.use('/flows', flowsRouter);
 
 // catch 404 and forward to error handler

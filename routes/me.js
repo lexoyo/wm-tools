@@ -1,6 +1,7 @@
 const express = require('express');
+const assert = require('assert');
 const router = express.Router();
-const debug = require('debug')('webmaster-tools:users');
+const debug = require('debug')('webmaster-tools:me');
 
 // router.get('/', function(req, res, next) {
 //   req.app.get('FB').getUser(req.session.accessToken, req.session.proof)
@@ -15,16 +16,34 @@ const debug = require('debug')('webmaster-tools:users');
 //     err,
 //   }));
 // });
+router.get('/pages', function(req, res, next) {
+  req.app.get('FB').getUserPages(req.session.accessToken, req.session.proof)
+  .then(pages => {
+    res.json({
+      success: true,
+      data: pages,
+    });
+  })
+  .catch(err => res.status(500).json({
+    success: false,
+    err,
+  }));
+});
 router.post('/', function(req, res, next) {
+  const FB = req.app.get('FB');
   const accessToken = req.body.accessToken;
   const expiresIn = req.body.expiresIn;
-  const proof = req.app.get('FB').getProof(accessToken);
+  const proof = FB.getProof(accessToken);
 
   const { User } = req.app.get('models');
 
-  req.app.get('FB').getUser(accessToken, proof)
+  FB.getUser(accessToken, proof)
   .then(fbUser => {
-    debug('FB user', fbUser);
+    debug('FB user', fbUser.name);
+    assert(fbUser && fbUser.id, 'Could not find userId by calling facebook API');
+    assert(!!accessToken, 'Missing accessToken');
+    assert(!!accessToken, 'Missing accessToken');
+    assert(!!expiresIn, 'Missing expiresIn');
     User.findOneAndUpdate(
       { userId: fbUser.id },
       {

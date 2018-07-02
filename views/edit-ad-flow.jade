@@ -1,5 +1,10 @@
 legend Edit Ad Flow:
 form#flowEditDialogEl(name="flows")
-  input.nameEl(type="text")
+  input.nameEl(type="text", data-name="name")
+  input.pausedEl(type="checkbox", data-type="boolean", data-name="paused")
+  div Paused
+  select.pageSelect(data-name="pageId")
+  input(type="hidden", data-name="parentId")
+  input(type="hidden", data-name="_id")
   button.okBtn(type="submit") Ok
   button.cancelBtn Cancel

@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const request = require('request');
+const debug = require('debug')('webmaster-tools:fb');
 
 const CLIENT_ID = '1948258332120118';
 const CLIENT_SECRET = 'cd1c95cbe42d3c6935515435aa263d4b'
@@ -38,6 +39,11 @@ class FB {
       url: 'me',
     });
   }
+  static getUserPages(accessToken, proof) {
+    return FB.get(accessToken, proof, 'name,id,access_token,fan_count', {
+      url: 'me/accounts',
+    });
+  }
   static getAdAccounts(accessToken, proof) {
     // this still uses the ads sdk in ads.js
     throw Error('not implemented');
@@ -47,7 +53,7 @@ class FB {
       url: `${ adAccountId }`,
     });
   }
-  static getAdCampaigns  (accessToken, proof, adAccountId) {
+  static getAdCampaigns(accessToken, proof, adAccountId) {
     return FB.get(accessToken, proof, 'name,objective,status', {
       url: `${ adAccountId }/campaigns`,
     });
@@ -57,10 +63,68 @@ class FB {
       url: `/${ campaignId }/adsets/`,
     });
   }
-  static getAds  (accessToken, proof, adSetId) {
+  static getAds(accessToken, proof, adSetId) {
     return FB.get(accessToken, proof, 'name,ad_draft_id,date_preset,effective_status,time_range,updated_since,insights,total_count', {
       url: `/${ adSetId }/ads`,
     });
+  }
+  static createAd(accessToken, proof, doc, websiteData) {
+    const { url, title, favicon, description, article, images, html } = websiteData;
+    const { parentId, paused, pageId } = doc;
+    debug('==============', doc, parentId, paused, pageId);
+    // Upload image
+    // create creative
+    // create ad
+    // https://developers.facebook.com/docs/marketing-api/buying-api#book-ad
+    // 
+      // 'Generated creative ' + Date.now()
+      // url: url,
+      // image: image,
+      // title: title,
+      // description: description,
+    return FB.get(accessToken, proof, '', {
+      url: `/${ parentId }/adimages`,
+      method: 'POST',
+      data: {
+        url: images[0].url,
+      }
+    })
+    .then(data => {
+      debug('image uploaded', data);
+      return data;
+    })
+    .then(imageData => FB.get(accessToken, proof, '', {
+      url: `/${ parentId }/adcreatives`,
+      method: 'POST',
+      data: {
+        name: 'Ad Flows Generated Ad Creative ' + Date.now(),
+        object_story_spec: {
+          link_data: {
+            image_hash: imageData.hash,
+            link: url,
+            message: title,
+            body: description,
+          },
+          page_id: doc.pageId,
+        }
+      }
+    }))
+    .then(data => {
+      console.log('xxxxxx adcreative done', data);
+      return data.id;
+    })
+    .then(creativeId => FB.get(accessToken, proof, '', {
+      url: `/${ parentId }/ads`,
+      method: 'POST',
+      data: {
+        name: 'Ad Flows Generated Ad ' + Date.now(),
+        adset_id: parentId,
+        status: paused ? 'PAUSED' : 'ACTIVE',
+        creative: {
+          creative_id: creativeId,
+        }
+      }
+    }));
   }
 }
 

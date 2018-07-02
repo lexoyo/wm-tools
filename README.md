@@ -3,7 +3,6 @@
 Webmaster Tools for Facebook, a set of tools by @lexoyo
 
 to do
-* material design
 * endpoint for web hooks
 * doc for IFTTT, Zapier and Huginn
 * i18n

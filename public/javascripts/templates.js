@@ -39,10 +39,12 @@ window.Templates = {
     return flows.map(flow => `
       <form>
         <h4>${ flow.name }</h4>
+        <input readonly type="text" value="${ window.location.href }webhooks?webhookToken=${ flow.webhookToken }&flowId=${ flow._id }&url="/>
         <code>
           ${ JSON.stringify(flow) }
         </code>
         <button data-delete-flow-id="${ flow._id }">x</button>
+        <button data-edit-flow-id="${ flow._id }">Edit</button>
       </form>
     `).join('');
   },

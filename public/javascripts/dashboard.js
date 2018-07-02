@@ -17,8 +17,23 @@ window.Dashboard = {
     };
     this.flowsEl = document.querySelector('#flowsEl');
     this.flowsEl.onclick = e => {
+      e.preventDefault();
+      if(e.target.hasAttribute('data-edit-flow-id')) {
+        Flow.edit(this.getAdSet(), 
+          this.getFlow(e.target.getAttribute('data-edit-flow-id')), {
+          success: response => {
+            console.log('create flow success', response);
+            this.refreshFlows();
+          },
+          error: response => {
+            this.error('create flow error', response);
+          },
+          cancel: () => {
+            console.log('create flow cancel');
+          },
+        });
+      }
       if(e.target.hasAttribute('data-delete-flow-id')) {
-        e.preventDefault();
         Api.deleteFlow(e.target.getAttribute('data-delete-flow-id'), {
           success: response => {
             console.log('create flow success', response);
@@ -102,8 +117,16 @@ window.Dashboard = {
     this.adSetsEl.innerHTML = '';
     this.adCampaignsEl.innerHTML = '';
     this.adsEl.innerHTML = '';
-    console.info('xxx', this.getAdAccount());
     const adAccount = this.getAdAccount();
+    console.info('adAccount', adAccount);
+    Api.getPages({
+      success: response => {
+        const pages = response.data;
+        console.log('pages', pages);
+        Flow.init(pages);
+      },
+      error: response => this.error('Error, could not get user pages.', response),
+    });
     if(adAccount) {
       this.setLoading(true);
       Api.getAdCampaigns(adAccount.id, {
@@ -199,5 +222,8 @@ window.Dashboard = {
     if(!this.adSetsEl.set) return null;
     const id = this.adSetsEl.set.value;
     return this.adSets.find(item => item.id === id);
+  },
+  getFlow(id) {
+    return this.flows.find(item => item._id === id);
   },
 }
