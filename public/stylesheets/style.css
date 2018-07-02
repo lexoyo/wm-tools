@@ -1,0 +1,30 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+.loading {
+  opacity: .5;
+}
+.loggedout .loggedin {
+  display: none;
+}
+.loggedin .loggedout {
+  display: none;
+}
+.error { display: none; }
+body.hasErrors .error { display: inherit; }
+body.hasErrors .no-error { display: none; }
+.error {
+  border: red solid 1px;
+  padding: 15px;
+}
+.error #errorEl {
+  font-style: italic;
+}
+/* MODALS */
+.edit-ad-flow { display: none; }
+body.show-edit-ad-flow .edit-ad-flow { display: inherit; }

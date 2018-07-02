@@ -1,0 +1,41 @@
+extends layout
+
+block content
+  script(src='./javascripts/api.js')
+  script(src='./javascripts/templates.js')
+  script(src='./javascripts/dashboard.js')
+  script(src='./javascripts/facebook.js')
+  script(src='./javascripts/flow.js')
+  h1 Ad Creator
+  section.auth
+    div.loggedin
+      p
+        #userEl
+        select#adAccountsEl
+      button#logoutBtn Logout
+    div.loggedout
+      p Login with Facebook
+      <fb:login-button id="loginBtn" scope="public_profile,email,ads_management" onlogin="checkLoginState();">
+      </fb:login-button>
+  section.loggedin
+    fieldset
+      legend Ad Campaigns:
+      form#adCampaignsEl(name="adCampaigns")
+    fieldset
+      legend Ad Sets:
+      form#adSetsEl(name="adSets")
+    fieldset
+      legend Selection details:
+      form#selectionDetailsEl(name="details")
+    fieldset
+      legend Ads:
+      form#adsEl(name="ads")
+    fieldset
+      legend Flows:
+      form#flowsEl(name="flows")
+    button#createFlowEl.no-error(title="Add an ad flow") +
+    fieldset.modal.edit-ad-flow.no-error
+      include ./edit-ad-flow
+  section.error
+    label Errors:
+    ul#errorEl
