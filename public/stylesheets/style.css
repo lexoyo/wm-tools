@@ -1,8 +1,139 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
 }
-
+body > section {
+  max-width: 850px;
+  margin: auto;
+  margin-top: 100px;
+}
+header {
+  background-color: darkcyan;
+  height: 35px;
+  padding: 10px;
+  color: white;
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+h1 {
+  margin: 0;
+}
+footer {
+  text-align: center;
+  margin-bottom: 80vh;
+}
+a[name] {
+  display: block;
+  height: 100px;
+}
+.round-button {
+  border-radius: 50%;
+  border: 1px solid white;
+  height: 40px;
+  width: 40px;
+  background-color: darkcyan;
+  color: white;
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+.cards > .radiogroup {
+  cursor: pointer;
+}
+.cards > .radiogroup:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 3px;
+}
+.cards > .radiogroup ul {
+  padding: 0;
+}
+.cards > .radiogroup li {
+  list-style: none;
+}
+.cards > input[type="radio"]:checked+.radiogroup {
+  border-color: darkcyan;
+}
+.cards > input.hidden {
+  display: none;
+}
+.auth .cards > input[type="radio"]:checked+.radiogroup {
+  font-weight: bold;
+  color: white;
+  border-color: white;
+}
+.auth .cards > .radiogroup:hover {
+  font-weight: bold;
+  box-shadow: none;
+  color: white;
+}
+.auth .cards > .radiogroup {
+  width: 100%;
+  min-width: inherit;
+  border: none;
+  border-bottom: 1px solid white;
+}
+.cards > .radiogroup {
+  border: 1px solid black;
+  width: 25%;
+  margin: 10px 1%;
+  padding: 20px 3%;
+  min-width: 150px;
+}
+.auth {
+  position: absolute;
+  right: 19px;
+  top: 0;
+  border-radius: 50%;
+  border: 1px solid black;
+  overflow: hidden;
+}
+.loggedout .auth {
+  border-radius: 0;
+  margin: 10px;
+}
+.auth:hover img {
+  margin-top: -10px;
+}
+.auth img {
+  float: right;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+.auth h3 {
+  margin-top: 60px;
+}
+.auth p {
+  margin: 0;
+}
+.auth p:first-of-type {
+  margin-top: 20px;
+}
+.auth p, .auth h3, .auth #adAccountsEl, .auth button {
+  display: none;
+}
+.auth:hover {
+  padding: 3px;
+  border-radius: 2px;
+  background-color: gray;
+  padding: 5px 5px 25px 25px;
+}
+.auth:hover #adAccountsEl {
+  display: flex;
+}
+.auth:hover p, .auth:hover h3, .auth:hover button {
+  display: inherit;
+}
+.code {
+  font-style: italic;
+  font-size: small;
+  max-width: 800px;
+  width: 50vw;
+  margin: auto;
+  word-wrap: break-word;
+}
 a {
   color: #00B7FF;
 }
@@ -19,12 +150,31 @@ a {
 body.hasErrors .error { display: inherit; }
 body.hasErrors .no-error { display: none; }
 .error {
-  border: red solid 1px;
+  border: darkcyan solid 1px;
   padding: 15px;
 }
 .error #errorEl {
   font-style: italic;
 }
 /* MODALS */
-.edit-ad-flow { display: none; }
+.modal { 
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  left: 0;
+  height: 100vh;
+  background-color: #80808066;
+  max-width: inherit;
+  margin: 0;
+}
+.edit-ad-flow { 
+margin: auto;
+width: 500px;
+background-color: white;
+padding: 5%;
+max-width: 95%;
+}
+.modal, .edit-ad-flow { display: none; }
 body.show-edit-ad-flow .edit-ad-flow { display: inherit; }
+body.show-edit-ad-flow .modal { display: flex; }

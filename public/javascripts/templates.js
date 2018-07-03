@@ -3,50 +3,62 @@ window.Templates = {
     return `
       <section id="user_${user.id}">
         <img src="${ user.picture.data.url }" />
-        <p>${user.business_name} (${user.name})</p>
+        <p>${user.name} ${ user.business_name ? '(' + user.business_name + ')' : ''}</p>
         <p>${user.email}</p>
       </section>
     `;
   },
   getAdAccountsList: function(adAccounts) {
-    return adAccounts.map(adAccount => `
-      <option value="${ adAccount.id }">${ adAccount.name }</option>
+    return adAccounts.map((adAccount, idx) => `
+      <input class="hidden" value="${ adAccount.id }" type="radio" id="id_${ adAccount.id }" name="account" ${ idx===0?'checked':'' } />
+      <label class="radiogroup" for="id_${ adAccount.id }">
+        ${ adAccount.name }
+      </label>
     `).join('');
   },
-  getAdCampaignsList: function(adCampaigns) {
+  getAdCampaignsList: function(adAccount, adCampaigns) {
     return adCampaigns.map((adCampaign, idx) => `
-      <input value="${ adCampaign.id }" type="radio" id="id_${ adCampaign.id }" name="campaign" ${ idx===0?'checked':'' } />
-      <label for="id_${ adCampaign.id }">${ adCampaign.name }</label>
+      <input class="hidden" value="${ adCampaign.id }" type="radio" id="id_${ adCampaign.id }" name="campaign" />
+      <label class="radiogroup" for="id_${ adCampaign.id }">
+        <h3>${ adCampaign.name }</h3>
+        <ul>
+          <li>Objective: ${ adCampaign.objective }</li><li>Status: ${ adCampaign.status }</li>
+          <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ adAccount.id }&selected_campaign_ids=${ adCampaign.id }">Edit</a>
+        </ul>
+      </label>
     `).join('');
   },
   getAdSetsList: function(adSets) {
     return adSets.map((adSet, idx) => `
-      <input value="${ adSet.id }" type="radio" id="id_${ adSet.id }" name="set" ${ idx===0?'checked':'' } />
-      <label for="id_${ adSet.id }">${ adSet.name }</label>
+      <input class="hidden" value="${ adSet.id }" type="radio" id="id_${ adSet.id }" name="set" />
+      <label class="radiogroup" for="id_${ adSet.id }">${ adSet.name }</label>
     `).join('');
   },
   getAdsList: function(ads) {
     return ads.map(ad => `
       <form>
         <h4>${ ad.name }</h4>
-        <code>
+        <div class="code">
           ${ JSON.stringify(ad) }
-        </code>
+        </div>
       </form>
     `).join('');
   },
   getFlowsList: function(flows) {
-    return flows.map(flow => `
+    return flows.map(flow => {
+      const webhookUrl = `/webhooks?webhookToken=${ flow.webhookToken }&flowId=${ flow._id }&url=`;
+      return `
       <form>
         <h4>${ flow.name }</h4>
-        <input readonly type="text" value="${ window.location.href }webhooks?webhookToken=${ flow.webhookToken }&flowId=${ flow._id }&url="/>
-        <code>
-          ${ JSON.stringify(flow) }
-        </code>
+        <input readonly type="text" value="${ webhookUrl }"/>
+        <a target="_blank" href="${ webhookUrl }https://www.silex.me">Test</a>
         <button data-delete-flow-id="${ flow._id }">x</button>
         <button data-edit-flow-id="${ flow._id }">Edit</button>
+        <div class="code">
+          ${ JSON.stringify(flow) }
+        </div>
       </form>
-    `).join('');
+    `}).join('');
   },
   getSelectionDetails: function(adAccount, adCampaign, adSet, ads, flows) {
     return `

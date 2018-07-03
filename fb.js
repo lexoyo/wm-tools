@@ -110,7 +110,6 @@ class FB {
       }
     }))
     .then(data => {
-      console.log('xxxxxx adcreative done', data);
       return data.id;
     })
     .then(creativeId => FB.get(accessToken, proof, '', {

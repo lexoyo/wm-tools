@@ -17,8 +17,8 @@ window.Dashboard = {
     };
     this.flowsEl = document.querySelector('#flowsEl');
     this.flowsEl.onclick = e => {
-      e.preventDefault();
       if(e.target.hasAttribute('data-edit-flow-id')) {
+        e.preventDefault();
         Flow.edit(this.getAdSet(), 
           this.getFlow(e.target.getAttribute('data-edit-flow-id')), {
           success: response => {
@@ -34,6 +34,7 @@ window.Dashboard = {
         });
       }
       if(e.target.hasAttribute('data-delete-flow-id')) {
+        e.preventDefault();
         Api.deleteFlow(e.target.getAttribute('data-delete-flow-id'), {
           success: response => {
             console.log('create flow success', response);
@@ -114,11 +115,13 @@ window.Dashboard = {
     });
   },
   refreshAdCampaigns: function() {
+    document.location.hash = '';
+    document.location.hash = '#campaigns';
     this.adSetsEl.innerHTML = '';
     this.adCampaignsEl.innerHTML = '';
     this.adsEl.innerHTML = '';
     const adAccount = this.getAdAccount();
-    console.info('adAccount', adAccount);
+    console.info('adAccount', this.adAccountsEl, adAccount);
     Api.getPages({
       success: response => {
         const pages = response.data;
@@ -133,7 +136,7 @@ window.Dashboard = {
         success: response => {
           this.adCampaigns = response.data;
           console.log('adCampaigns', this.adCampaigns);
-          this.adCampaignsEl.innerHTML = Templates.getAdCampaignsList(this.adCampaigns);
+          this.adCampaignsEl.innerHTML = Templates.getAdCampaignsList(adAccount, this.adCampaigns);
           this.setLoading(false);
           this.refreshAdSets();
         },
@@ -157,12 +160,17 @@ window.Dashboard = {
           this.adSetsEl.innerHTML = Templates.getAdSetsList(this.adSets);
           this.setLoading(false);
           this.refreshAds();
+          document.location.hash = '';
+          document.location.hash = '#sets';
         },
         error: response => this.error('Error, could not get ad sets.', response),
       });
     }
     else {
-      this.error('You need to create an ad campaign in <a href="https://www.facebook.com/adsmanager/manage/campaigns">Facebook Ad Manager</a>. Or select a different ad account.')
+      if(this.adCampaigns.length === 0)
+        this.error('You need to create an ad campaign in <a href="https://www.facebook.com/adsmanager/manage/campaigns">Facebook Ad Manager</a>. Or select a different ad account.');
+      else
+        this.error('<a href="#campaigns">You need to select an ad campaign</a>. Or select a different ad account.');
     }
   },
   refreshAds: function() {
@@ -198,6 +206,8 @@ window.Dashboard = {
           this.flowsEl.innerHTML = Templates.getFlowsList(this.flows);
           this.selectionDetailsEl.innerHTML = Templates.getSelectionDetails(this.getAdAccount(), this.getAdCampaign(), this.getAdSet(), this.ads, this.flows);
           this.setLoading(false);
+          document.location.hash = '';
+          document.location.hash = '#flows';
         },
         error: response => this.error('Error, could not get ad flows.', response),
       });
@@ -210,7 +220,8 @@ window.Dashboard = {
   // Selection
   /////////////////////////////
   getAdAccount() {
-    const id = this.adAccountsEl.value;
+    if(!this.adAccountsEl.account) return null;
+    const id = this.adAccountsEl.account.value;
     return this.adAccounts.find(item => item.id === id); 
   },
   getAdCampaign() {
