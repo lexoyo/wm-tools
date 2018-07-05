@@ -27,17 +27,22 @@ function executeHook(Flow, FB, webhookToken, flowId, data) {
   assert(!!flowId, 'Missing flowId');
   assert(!!webhookToken, 'Missing webhookToken');
   return Flow.findOne(
-    {_id: flowId, webhookToken: webhookToken}
+    { _id: flowId, webhookToken: webhookToken }
   )
+/*
   .then(doc => {
     return AdGenerator.startJob(doc, data);
   })
   .then(({ websiteData, doc }) => {
-    console.log('next step', websiteData, doc);
-    return FB.createAd(doc.accessToken, doc.proof, doc, websiteData);
+*/
+  .then(doc => {
+    console.log('Found hook', doc);
+    return FB.createAd(doc, data)
+    // add the doc to the result
+    .then(ad => { return { ad: ad, doc: doc}});
   })
   .then(({ ad, doc }) => {
-    console.log('result of executeHook', data);
+    console.log('result of executeHook', ad, doc);
     // save new doc (ad => db)
     // get preview
     return ad;

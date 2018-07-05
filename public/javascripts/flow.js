@@ -3,21 +3,22 @@ window.Flow = {
     console.log('flow init', pages);
     this.pages = pages;
   },
-  create: function(account, options) {
+  create: function(account, parent, options) {
     console.log('Create a flow', options);
-    this.editOrCreate(account, this.saveNew, options, {
-      parentId: account.id,
+    this.editOrCreate(account, parent, this.saveNew, options, {
+      accountId: account.id,
+      parentId: parent.id,
       paused: true,
     });
   },
-  edit: function(account, flow, options) {
+  edit: function(account, parent, flow, options) {
     console.log('Edit a flow', flow, options);
-    this.editOrCreate(account, this.save, options, flow);
+    this.editOrCreate(account, parent, this.save, options, flow);
   },
-  editOrCreate: function(account, method, {success, error, cancel}, data) {
+  editOrCreate: function(account, parent, method, {success, error, cancel}, data) {
     this.openEditDialog({
       data: data,
-      success: data => method(account, {
+      success: data => method(account, parent, {
         data: data,
         success: success,
         error: error,
@@ -25,17 +26,17 @@ window.Flow = {
       cancel: cancel,
     });
   },
-  saveNew: function(account, {data, success, error}) {
+  saveNew: function(account, parent, {data, success, error}) {
     console.log('saveNew', account, data);
-    Api.createFlow(account.id, {
+    Api.createFlow(parent.id, {
       data: data,
       success: response => success(response),
       error: response => error(response),
     });
   },
-  save: function(account, {data, success, error}) {
+  save: function(account, parent, {data, success, error}) {
     console.log('saveNew', account, data);
-    Api.updateFlow(account.id, {
+    Api.updateFlow(parent.id, {
       data: data,
       success: response => success(response),
       error: response => error(response),
@@ -57,7 +58,7 @@ window.Flow = {
     }
     const pageSelect = flowEditDialogEl.querySelector('.pageSelect');
     pageSelect.innerHTML = this.pages.map(page => `
-      <option value="${ page.id }">${ page.name }</option>
+      <option value='${ JSON.stringify(page) }'>${ page.name }</option>
     `).join('');
 
     this.setData(data);
@@ -104,6 +105,9 @@ window.Flow = {
       const name = el.getAttribute('data-name');
       if(type === 'boolean')
         data[name] = el.checked;
+      else if(type === 'object')
+        data[name] = (el.value);
+        //data[name] = JSON.parse(el.value);
       else if(el.value)
         data[name] = el.value;
     }

@@ -19,7 +19,7 @@ window.Dashboard = {
     this.flowsEl.onclick = e => {
       if(e.target.hasAttribute('data-edit-flow-id')) {
         e.preventDefault();
-        Flow.edit(this.getAdSet(), 
+        Flow.edit(this.getAdAccount(), this.getAdSet(), 
           this.getFlow(e.target.getAttribute('data-edit-flow-id')), {
           success: response => {
             console.log('create flow success', response);
@@ -53,7 +53,7 @@ window.Dashboard = {
 
 
     this.createFlowEl = document.querySelector('#createFlowEl');
-    this.createFlowEl.onclick = e => Flow.create(this.getAdSet(), {
+    this.createFlowEl.onclick = e => Flow.create(this.getAdAccount(), this.getAdSet(), {
       success: response => {
         console.log('create flow success', response);
         this.refreshFlows();

@@ -3,7 +3,8 @@ form#flowEditDialogEl(name="flows")
   input.nameEl(type="text", data-name="name")
   input.pausedEl(type="checkbox", data-type="boolean", data-name="paused")
   div Paused
-  select.pageSelect(data-name="pageId")
+  select.pageSelect(data-name="page", data-type="object")
+  input(type="hidden", data-name="accountId")
   input(type="hidden", data-name="parentId")
   input(type="hidden", data-name="_id")
   button.okBtn(type="submit") Ok

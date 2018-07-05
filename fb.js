@@ -14,6 +14,7 @@ class FB {
     return new Promise((resolve, reject) => {
       try {
         const requestOptions = Object.assign({}, options, {
+          method: options.method || 'GET',
           json: true,
           baseUrl: FB_ENDPOINT,
           qs: {
@@ -68,63 +69,108 @@ class FB {
       url: `/${ adSetId }/ads`,
     });
   }
-  static createAd(accessToken, proof, doc, websiteData) {
+  static createAd({ accessToken, parentId, accountId, page, paused, name }, { url }) {
+//    const { name, id, access_token, fan_count } = page;
+    debug('createAd', accessToken, parentId, accountId, page, paused, name);
+
+    const creative = {
+      object_story_spec: {
+        link_data: {
+          link: url,
+          attachment_style: "link"
+        },
+        page_id: page.id,
+      },
+      object_type: "SHARE"
+    };
+    const now = new Date();
+    const data = {
+      name: `${ now.getMonth()+1 }/${ now.getDate() } ${ now.getHours() }:${ now.getMinutes() } Ad From Flow ${ name }`,
+      account_id: accountId,
+      action: 'add',
+      ad_object_type: 'ad',
+      parent_ad_object_id: parentId,
+      adset_id: parentId,
+      creative: JSON.stringify(creative),
+    }
+    const options = {
+      method: 'POST',
+      url: `${ accountId }/ads`,
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      formData: data,
+    }
+    return FB.get(accessToken, FB.getProof(accessToken), '', options);
+  }
+/*
+  static createAd(doc, websiteData) {
     const { url, title, favicon, description, article, images, html } = websiteData;
-    const { parentId, paused, pageId } = doc;
-    debug('==============', doc, parentId, paused, pageId);
+    const { accessToken, parentId, paused, page } = doc;
+    const imageUrl = images[0].url;
+    const imageName = images[0].url.split('/').pop();
+    debug('createAd', parentId, paused, page.id);
+    const proof = FB.getProof(accessToken);
+    // download image
+    return new Promise((resolve, reject) => {
+      debug('start download', imageUrl);
+      try {
+        request({
+          url: imageUrl,
+          encoding: null
+        }, (error, response, body) => {
+          debug('end download', error, body == null);
+          if(error) reject(error);
+          else resolve(body);
+        })
+      }
+      catch(e) {
+        console.error('Error download image', imageUrl, e);
+        reject(e);
+      }
+    })
+    .then(data => {
+      debug('============= image downloaded');
+      return data;
+    })
     // Upload image
+    .then(imageData => {
+      debug('imageData', imageName, Buffer.from(imageData).toString('base64').substr(-100));
+      debug('Upload image', doc.accountId, accessToken, proof);
+
+      return FB.get(accessToken, proof, '', {
+        url: `/${ doc.accountId }/adimages`,
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+        formData: {
+          bytes: Buffer.from(imageData).toString('base64'),
+          name: imageName,
+          encoding: 'data:image/png;base64',
+        },
+      })
+    })
+    .then(data => {
+      debug('============= image uploaded', data);
+      if(data.error) {
+        console.error('Image upload ERROR', data.error);
+        return Promise.reject(data.error.message);
+      }
+      return data;
+    })
     // create creative
     // create ad
     // https://developers.facebook.com/docs/marketing-api/buying-api#book-ad
-    // 
-      // 'Generated creative ' + Date.now()
-      // url: url,
-      // image: image,
-      // title: title,
-      // description: description,
-    return FB.get(accessToken, proof, '', {
-      url: `/${ parentId }/adimages`,
-      method: 'POST',
-      data: {
-        url: images[0].url,
-      }
+    .then(imageData => {
     })
     .then(data => {
-      debug('image uploaded', data);
-      return data;
-    })
-    .then(imageData => FB.get(accessToken, proof, '', {
-      url: `/${ parentId }/adcreatives`,
-      method: 'POST',
-      data: {
-        name: 'Ad Flows Generated Ad Creative ' + Date.now(),
-        object_story_spec: {
-          link_data: {
-            image_hash: imageData.hash,
-            link: url,
-            message: title,
-            body: description,
-          },
-          page_id: doc.pageId,
-        }
-      }
-    }))
-    .then(data => {
+      debug('============= creative OK', data, data.error);
+      if(data.error) return Promise.reject(data.error.error_user_title + ': ' + data.error.error_user_msg);
       return data.id;
     })
-    .then(creativeId => FB.get(accessToken, proof, '', {
-      url: `/${ parentId }/ads`,
-      method: 'POST',
-      data: {
-        name: 'Ad Flows Generated Ad ' + Date.now(),
-        adset_id: parentId,
-        status: paused ? 'PAUSED' : 'ACTIVE',
-        creative: {
-          creative_id: creativeId,
-        }
-      }
-    }));
   }
+*/
 }
 
 module.exports = FB;

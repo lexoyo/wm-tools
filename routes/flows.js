@@ -15,14 +15,13 @@ router.get('/', function(req, res, next) {
   assert(!!userId, 'Missing userId');
   assert(!!parentId, 'Missing parentId');
   Flow.find({userId: userId, parentId: parentId}, (err, docs) => {
-    debug('wtf!!!!!', err, docs);
     if(err) utils.sendKo(res, err);
     else utils.sendOk(res, docs);
   });
 });
 router.post('/:flowId', function(req, res, next) {
   const { flowId } = req.params;
-  const { name } = req.body;
+  const { parentId, name, page, paused, accountId } = req.body;
   const { accessToken, userId } = req.session;
   const { Flow } = req.app.get('models');
   assert(!!userId, 'Missing userId');
@@ -33,6 +32,11 @@ router.post('/:flowId', function(req, res, next) {
     {userId: userId, _id: mongoose.Types.ObjectId(flowId)},
     {
       $set: {
+        accessToken: accessToken,
+        parentId: parentId,
+        accountId: accountId,
+        page: JSON.parse(page),
+        paused: paused,
         name: name,
       }
     },
@@ -62,16 +66,22 @@ router.delete('/:flowId', function(req, res, next) {
   );
 });
 router.post('/', function(req, res, next) {
-  debug('router path POST /', req.params);
-  const { parentId, name } = req.body;
+  debug('router path POST /', req.body);
+  const { parentId, name, page, paused, accountId } = req.body;
   const { accessToken, userId } = req.session;
   const { Flow } = req.app.get('models');
   assert(!!userId, 'Missing userId');
   assert(!!parentId, 'Missing parentId');
+  assert(!!page, 'Missing page');
+  assert(typeof paused != 'undefined', 'Missing paused');
   Flow.create(
     {
       userId: userId,
+      accessToken: accessToken,
       parentId: parentId,
+      accountId: accountId,
+      page: JSON.parse(page),
+      paused: paused,
       name: name,
       webhookToken: crypto.randomBytes(16).toString('hex'),
     },

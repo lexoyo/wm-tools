@@ -14,7 +14,7 @@ module.exports = {
     debug('Send error', err);
     res.status(500).json({
       success: false,
-      error: err,
+      error: err || 'Unknown error',
     });
   },
   sendSuccess: function(res, data) {
@@ -26,10 +26,11 @@ module.exports = {
   },
   sendOkPromise: function(res) {
     return data => {
-      if(data.error) this.sendError(res, data.error);
-      else {
+      console.log('sendOkPromise', data);
+      if(data && !data.error) 
         this.sendSuccess(res, data);
-      }
+      else if(data) this.sendError(res, data.error);
+      else this.sendError(res);
     }
   },
   sendOk: function(res, data) {

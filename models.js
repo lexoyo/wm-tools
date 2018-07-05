@@ -29,8 +29,10 @@ function start() {
 
   const flowSchema = mongoose.Schema({
     name: String,
+    accessToken: String,
     userId: String,
-    pageId: String,
+    accountId: String,
+    page: Object,
     webhookToken: String,
     parentId: String,
     paused: Boolean,
