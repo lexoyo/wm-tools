@@ -54,7 +54,7 @@ window.Templates = {
         <a target="_blank" href="${ webhookUrl }https://www.silex.me">Test</a>
         <button data-delete-flow-id="${ flow._id }">x</button>
         <button data-edit-flow-id="${ flow._id }">Edit</button>
-        <div class="code">
+        <div class="code debug">
           ${ JSON.stringify(flow) }
         </div>
       </form>
