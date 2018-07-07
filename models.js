@@ -32,7 +32,7 @@ function start() {
     accessToken: String,
     userId: String,
     accountId: String,
-    pageId: Object,
+    page: Object,
     webhookToken: String,
     parentId: String,
     paused: Boolean,

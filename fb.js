@@ -1,10 +1,14 @@
 const crypto = require('crypto');
 const request = require('request');
+const assert = require('assert');
 const debug = require('debug')('webmaster-tools:fb');
 
 const CLIENT_ID = process.env.FB_APP_ID;
 const CLIENT_SECRET = process.env.FB_APP_SECRET;
 const FB_ENDPOINT = 'https://graph.facebook.com/v3.0/';
+
+assert(CLIENT_ID, 'missing env var CLIENT_ID');
+assert(CLIENT_SECRET, 'missing env var CLIENT_SECRET');
 
 class FB {
   static getProof(accessToken) {
