@@ -1,6 +1,9 @@
 window.Dashboard = {
   init: function() {
-    console.log('Dashboard init');
+    // debug flag
+    this.debug = window.location.search.indexOf('debug') > 0;
+    if(this.debug) document.body.classList.add('debug');
+    console.log('Dashboard init', this.debug);
     this.errorEl = document.querySelector('#errorEl');
     this.userEl = document.querySelector('#userEl');
     this.adAccountsEl = document.querySelector('#adAccountsEl');
@@ -131,6 +134,7 @@ window.Dashboard = {
       error: response => this.error('Error, could not get user pages.', response),
     });
     if(adAccount) {
+      document.body.classList.add('hasAdAccount');
       this.setLoading(true);
       Api.getAdCampaigns(adAccount.id, {
         success: response => {
@@ -144,7 +148,8 @@ window.Dashboard = {
       });
     }
     else {
-      this.error('You need to create an ad account.')
+      document.body.classList.remove('hasAdAccount');
+      this.error('You need to create an ad account, please go to in <a href="https://www.facebook.com/adsmanager/">Facebook Ads Manager</a>.')
     }
   },
   refreshAdSets: function() {
@@ -152,6 +157,7 @@ window.Dashboard = {
     this.adsEl.innerHTML = '';
     const adCampain = this.getAdCampaign();
     if(adCampain) {
+      document.body.classList.add('hasAdCampaign');
       this.setLoading(true);
       Api.getAdSets(adCampain.id, {
         success: response => {
@@ -167,8 +173,9 @@ window.Dashboard = {
       });
     }
     else {
+      document.body.classList.remove('hasAdCampaign');
       if(this.adCampaigns.length === 0)
-        this.error('You need to create an ad campaign in <a href="https://www.facebook.com/adsmanager/manage/campaigns">Facebook Ad Manager</a>. Or select a different ad account.');
+        this.error('You need to create an ad campaign in <a href="https://www.facebook.com/adsmanager/manage/campaigns">Facebook Ads Manager</a>. Or select a different ad account.');
       else
         this.error('<a href="#campaigns">You need to select an ad campaign</a>. Or select a different ad account.');
     }
@@ -190,13 +197,14 @@ window.Dashboard = {
       });
     }
     else {
-      this.error('You need to create an ad set in <a href="https://www.facebook.com/adsmanager/manage/adsets">Facebook Ad Manager</a>. Or select a different campaign.')
+      this.error('You need to create an ad set in <a href="https://www.facebook.com/adsmanager/manage/adsets">Facebook Ads Manager</a>. Or select a different campaign.')
     }
   },
   refreshFlows: function() {
     this.flowsEl.innerHTML = '';
     const adSet = this.getAdSet();
     if(adSet) {
+      document.body.classList.add('hasAdSet');
       this.setLoading(true);
       Api.getFlows({
         data: {parentId: adSet.id},
@@ -213,7 +221,8 @@ window.Dashboard = {
       });
     }
     else {
-      this.error('You need to create an ad set in <a href="https://www.facebook.com/adsmanager/manage/adsets">Facebook Ad Manager</a>. Or select a different campaign.')
+      document.body.classList.remove('hasAdSet');
+      this.error('You need to create an ad set in <a href="https://www.facebook.com/adsmanager/manage/adsets">Facebook Ads Manager</a>. Or select a different campaign.')
     }
   },
   /////////////////////////////

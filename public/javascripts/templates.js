@@ -3,8 +3,8 @@ window.Templates = {
     return `
       <section id="user_${user.id}">
         <img src="${ user.picture.data.url }" />
-        <p>${user.name} ${ user.business_name ? '(' + user.business_name + ')' : ''}</p>
-        <p>${user.email}</p>
+        <p class="only-hover">${user.name} ${ user.business_name ? '(' + user.business_name + ')' : ''}</p>
+        <p class="only-hover">${user.email}</p>
       </section>
     `;
   },

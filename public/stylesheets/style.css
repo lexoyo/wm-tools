@@ -2,9 +2,6 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   margin: 0;
 }
-.debug {
-  display: none;
-}
 body > section {
   max-width: 850px;
   margin: auto;
@@ -30,6 +27,14 @@ a[name] {
   display: block;
   height: 100px;
 }
+body .debug {
+  display: none;
+}
+body.debug .debug {
+  display: inherit;
+}
+.debugForm { margin-top: 15px; }
+.debugForm * { cursor: pointer; }
 .round-button {
   border-radius: 50%;
   border: 1px solid white;
@@ -63,6 +68,9 @@ a[name] {
   font-weight: bold;
   color: white;
   border-color: white;
+  line-height: 1;
+  margin: 0;
+  padding: 10px 0;
 }
 .auth .cards > .radiogroup:hover {
   font-weight: bold;
@@ -73,7 +81,6 @@ a[name] {
   width: 100%;
   min-width: inherit;
   border: none;
-  border-bottom: 1px solid white;
 }
 .cards > .radiogroup {
   border: 1px solid black;
@@ -86,34 +93,22 @@ a[name] {
 }
 .auth {
   position: absolute;
-  right: 19px;
-  top: 0;
+  right: 20px;
+  top: 1px;
   border-radius: 50%;
   border: 1px solid black;
-  overflow: hidden;
+  min-height: 22px;
 }
 .loggedout .auth {
   border-radius: 0;
   margin: 10px;
-}
-.auth:hover img {
-  margin-top: -10px;
 }
 .auth img {
   float: right;
   border: 1px solid black;
   border-radius: 50%;
 }
-.auth h3 {
-  margin-top: 60px;
-}
-.auth p {
-  margin: 0;
-}
-.auth p:first-of-type {
-  margin-top: 20px;
-}
-.auth p, .auth h3, .auth #adAccountsEl, .auth button {
+.auth .only-hover {
   display: none;
 }
 .auth:hover {
@@ -121,12 +116,20 @@ a[name] {
   border-radius: 2px;
   background-color: gray;
   padding: 5px 5px 25px 25px;
+  overflow-y: auto;
+  max-width: 100%;
+  min-width: 250px;
+
+  word-wrap: break-word;
+  transition: width .1s ease;
 }
-.auth:hover #adAccountsEl {
-  display: flex;
-}
-.auth:hover p, .auth:hover h3, .auth:hover button {
+.auth:hover .only-hover {
   display: inherit;
+}
+.auth:hover form.only-hover {
+  display: flex;
+  margin: 0;
+  padding: 0;
 }
 .code {
   font-style: italic;
@@ -151,12 +154,37 @@ a {
 .error { display: none; }
 body.hasErrors .error { display: inherit; }
 body.hasErrors .no-error { display: none; }
-.error {
+.loggedout-message, .error {
   border: darkcyan solid 1px;
   padding: 15px;
 }
+.empty-message {
+  display: none;
+  font-size: x-large;
+  text-align: center;
+  padding: 45px;
+  color: darkcyan;
+}
+body .hasAdAccount, body .hasAdCampaign, body .hasAdSet {display: none;}
+body.hasAdAccount .hasAdAccount, body.hasAdCampaign .hasAdCampaign, body.hasAdSet .hasAdSet {display: inherit;}
+
+#flowsEl:empty ~ .empty-message,
+#adSetsEl:empty ~ .empty-message,
+#adCampaignsEl:empty ~ .empty-message {
+  display: inherit;
+}
+.error {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 2px red solid;
+  border-bottom: none;
+}
 .error #errorEl {
   font-style: italic;
+  list-style: none;  
 }
 /* MODALS */
 .modal { 

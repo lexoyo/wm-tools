@@ -11,38 +11,48 @@ block content
     section.auth
       div.loggedin
         #userEl
-        h3 Your Ad Accounts:
-        form#adAccountsEl.cards
-        button#logoutBtn Logout
+        hr.only-hover
+        form.only-hover#adAccountsEl.cards
+        hr.only-hover
+        button.only-hover#logoutBtn Logout
+        form.only-hover.debugForm
       div.loggedout
-        p Login with Facebook
+        p.only-hover Login with Facebook
         <fb:login-button id="loginBtn" scope="email,manage_pages,publish_pages,pages_messaging,pages_show_list,public_profile,ads_management" onlogin="checkLoginState();">
         </fb:login-button>
+      p.only-hover Debug mode:
+        &nbsp;
+        a(href="?debug") on
+        &nbsp;
+        a(href="?") off
+  section.loggedout.loggedout-message
+    p Please login with Facebook.
   section.loggedin
     a(name="campaigns")
-    fieldset
-      legend Ad Campaigns:
+    fieldset.hasAdAccount
+      legend Select one of your campaigns Campaigns
       form#adCampaignsEl.cards(name="adCampaigns")
+      .empty-message You need to create an ad campaign in <a href="https://www.facebook.com/adsmanager/manage/campaigns">Facebook Ads Manager</a>. Or select a different ad account.
     a(name="sets")
-    fieldset
-      legend Ad Sets:
+    fieldset.hasAdCampaign
+      legend Select one of your ad sets Sets
       form#adSetsEl.cards(name="adSets")
+      .empty-message You need to create an ad set in <a href="https://www.facebook.com/adsmanager/manage/adsets">Facebook Ads Manager</a>.<br/>Or <strong>scroll UP</strong> and select a different campaign.
     fieldset.debug
-      legend Selection details:
       form#selectionDetailsEl(name="details")
     fieldset.debug
-      legend Ads:
+      legend Here are your ads
       form#adsEl(name="ads")
     a(name="flows")
-    fieldset
-      legend Flows:
+    fieldset.hasAdSet
+      legend Manage your ad flows
       form#flowsEl(name="flows")
-    button#createFlowEl.round-button(title="Add an ad flow") +
+      .empty-message Click "+" to create your first Ad Flow
+    button#createFlowEl.round-button.hasAdSet(title="Add an ad flow") +
   section.modal
     .edit-ad-flow.no-error
       include ./edit-ad-flow
   section.error
-    label Errors:
     ul#errorEl
   footer
     <a href="https://internetdefrance.fr">internetdefrance.fr</a>
