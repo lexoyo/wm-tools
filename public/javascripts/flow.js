@@ -42,19 +42,47 @@ window.Flow = {
       error: response => error(response),
     });
   },
+  openInfoDialog: function(flow, {success}) {
+    console.log('openInfoDialog', flow);
+    document.body.classList.add('show-info-ad-flow');
+    const flowInfoDialogEl = document.body.querySelector('#flowInfoDialogEl');
+    const urlInput = flowInfoDialogEl.querySelector('.urlInput');
+    urlInput.value = `${ window.location.origin }/webhooks?webhookToken=${ flow.webhookToken }&flowId=${ flow._id }&url=`;
+    const cancelBtns = flowInfoDialogEl.querySelectorAll('.cancelBtn');
+    for(let i=0; i<cancelBtns.length; i++) {
+      const cancelBtn = cancelBtns[i];
+      cancelBtn.onclick = e => {
+        e.preventDefault();
+        this.closeInfoDialog();
+      }
+    }
+    this.onclose = {success: success};
+  },
+  closeInfoDialog: function() {
+    console.log('closeInfoDialog');
+    document.body.classList.remove('show-info-ad-flow');
+    if(this.onclose && this.onclose.success) {
+      console.log('closeInfoDialog ok', this.getData());
+      this.onclose.success(this.getData());
+    }
+    this.onclose = null;
+  },
   openEditDialog: function({data, success, cancel}) {
     console.log('openEditDialog');
     document.body.classList.add('show-edit-ad-flow');
     const flowEditDialogEl = document.body.querySelector('#flowEditDialogEl');
-    const cancelBtn = flowEditDialogEl.querySelector('.cancelBtn');
     flowEditDialogEl.onsubmit = e => {
       console.info('SUBMIT');
       e.preventDefault();
       this.closeEditDialog(true);
     }
-    cancelBtn.onclick = e => {
-      e.preventDefault();
-      this.closeEditDialog();
+    const cancelBtns = flowEditDialogEl.querySelectorAll('.cancelBtn');
+    for(let i=0; i<cancelBtns.length; i++) {
+      const cancelBtn = cancelBtns[i];
+      cancelBtn.onclick = e => {
+        e.preventDefault();
+        this.closeEditDialog();
+      }
     }
     const pageSelect = flowEditDialogEl.querySelector('.pageSelect');
     pageSelect.innerHTML = this.pages.map(page => `
@@ -79,20 +107,18 @@ window.Flow = {
         this.onclose.cancel();
       }
     }
+    this.onclose = null;
   },
   setData(data) {
     const dataElements = flowEditDialogEl.querySelectorAll('[data-name]');
     for(idx=0; idx<dataElements.length; idx++) {
       const el = dataElements[idx];
-      console.log('aaa', el)
       const name = el.getAttribute('data-name');
       const type = el.getAttribute('data-type');
-      if(data[name]) {
-        if(type === 'boolean')
-          el.checked = data[name];
-        else
-          el.value = data[name];
-      }
+      if(type === 'boolean')
+        el.checked = !!data[name];
+      else
+        el.value = data[name] || '';
     }
   },
   getData() {

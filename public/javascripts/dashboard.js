@@ -20,7 +20,15 @@ window.Dashboard = {
     };
     this.flowsEl = document.querySelector('#flowsEl');
     this.flowsEl.onclick = e => {
-      if(e.target.hasAttribute('data-edit-flow-id')) {
+      if(e.target.hasAttribute('data-open-flow-id')) {
+        e.preventDefault();
+        Flow.openInfoDialog(this.getFlow(e.target.getAttribute('data-open-flow-id')), {
+          success: response => {
+            console.log('open flow success', response);
+          },
+        });
+      }
+      else if(e.target.hasAttribute('data-edit-flow-id')) {
         e.preventDefault();
         Flow.edit(this.getAdAccount(), this.getAdSet(), 
           this.getFlow(e.target.getAttribute('data-edit-flow-id')), {
@@ -36,7 +44,7 @@ window.Dashboard = {
           },
         });
       }
-      if(e.target.hasAttribute('data-delete-flow-id')) {
+      else if(e.target.hasAttribute('data-delete-flow-id')) {
         e.preventDefault();
         Api.deleteFlow(e.target.getAttribute('data-delete-flow-id'), {
           success: response => {

@@ -36,28 +36,33 @@ window.Templates = {
   },
   getAdsList: function(ads) {
     return ads.map(ad => `
-      <form>
+      <article>
         <h4>${ ad.name }</h4>
         <div class="code">
           ${ JSON.stringify(ad) }
         </div>
-      </form>
+      </article>
     `).join('');
   },
   getFlowsList: function(flows) {
     return flows.map(flow => {
-      const webhookUrl = `/webhooks?webhookToken=${ flow.webhookToken }&flowId=${ flow._id }&url=`;
+      const webhookUrl = `${ window.location.origin }/webhooks?webhookToken=${ flow.webhookToken }&flowId=${ flow._id }&url=`;
       return `
-      <form>
-        <h4>${ flow.name }</h4>
-        <input readonly type="text" value="${ webhookUrl }"/>
-        <a target="_blank" href="${ webhookUrl }https://www.silex.me">Test</a>
-        <button data-delete-flow-id="${ flow._id }">x</button>
-        <button data-edit-flow-id="${ flow._id }">Edit</button>
-        <div class="code debug">
-          ${ JSON.stringify(flow) }
+      <article>
+        <h4 class="head">${ flow.name }</h4>
+        <div class="body">
+          <input readonly type="text" value="${ webhookUrl }"/>
+          <button data-open-flow-id="${ flow._id }">Open this flow</button>
+          <div class="code debug">
+            ${ JSON.stringify(flow) }
+          </div>
         </div>
-      </form>
+        <div class="footer">
+          <a target="_blank" href="${ webhookUrl }https://www.silex.me">Test</a>
+          <button data-delete-flow-id="${ flow._id }">Delete</button>
+          <button data-edit-flow-id="${ flow._id }">Edit</button>
+        </div>
+      </article>
     `}).join('');
   },
   getSelectionDetails: function(adAccount, adCampaign, adSet, ads, flows) {
