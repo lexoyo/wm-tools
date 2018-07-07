@@ -1,0 +1,46 @@
+#flowInfoDialogEl.info-ad-flow.modal-window
+  h2 Link this Ad Flow with an RSS feed
+  button.cancelBtn2.cancelBtn X
+  section
+    h3 Here is the URL of your flow:
+    input.urlInput(readonly, type="text")
+  section.help-message
+    h3 What to do with this URL:
+    p <strong>Short anser</strong>: create an applet in IFTTT to link an RSS feed with your new Ad Flow. After that, when there is a new element in the RSS feed, I will create an Ad for you.
+    p <strong>Detailed anser</strong>:
+    ol
+      li Open <a href="https://ifttt.com/create">IFTTT "create an applet" page</a>
+      li Click on "This" to start the process
+      li Type "RSS" and choose the "RSS feed" service
+      li Choose one of the "New feed item" option (or the other one is fine)
+      li Enter your feed URL, or use this one to test: https://www.reddit.com/.rss or http://rss.cnn.com/rss/cnn_topstories.rss or http://lorem-rss.herokuapp.com/feed
+      li Validate with the "trigger" button
+      li Click on "That"
+      li Type "web" and choose the "Webhooks" service
+      li Select the "Make a web request" option
+      li In "URL" you need to put the URL of your flow, provided above here
+      li Leave "Method" and "Content type" alone
+      li For "Body", click on the "Add ingredient" button and select "EntryUrl"
+      li Click on "Create action" and then "Finish"
+      li Wait for ads to be created <a href="https://www.facebook.com/adsmanager/manage/ads">in Facebook Ads Manager</a> when new items arrive.
+  button.cancelBtn Close
+
+.edit-ad-flow.modal-window.no-error
+  h2 Edit Ad Flow
+  form#flowEditDialogEl(name="flows")
+    button.cancelBtn2.cancelBtn X
+    section
+      label Name: 
+      input.nameEl(type="text", data-name="name")
+    section
+      label Paused
+      input.pausedEl(type="checkbox", data-type="boolean", data-name="paused")
+    section
+      label Facebook page to associate with your ads
+      select.pageSelect(data-name="page", data-type="object")
+    section
+      button.okBtn(type="submit") Ok
+      button.cancelBtn Cancel
+    input(type="hidden", data-name="accountId")
+    input(type="hidden", data-name="parentId")
+    input(type="hidden", data-name="_id")

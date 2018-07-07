@@ -1,0 +1,71 @@
+.modal { 
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  left: 0;
+  height: 100vh;
+  background-color: #80808066;
+  max-width: inherit;
+  margin: 0;
+}
+.modal-window { 
+  margin: auto;
+  width: 500px;
+  background-color: white;
+  max-width: 95%;
+  border: 1px solid black;
+  border-radius: 4px;
+  max-height: 80%;
+  overflow: auto;
+}
+.modal-window > h2 { 
+  background-color: darkcyan;
+  color: white;
+  padding: 10px;
+  margin: 0;
+}
+.modal-window > form { 
+  padding: 5%;
+}
+.modal-window button { 
+  font-size: 16px;
+  cursor: pointer;
+}
+.modal-window section { 
+  margin: 30px 0;
+  line-height: 2;
+}
+.modal-window input[type=text] {
+  width: 95%;
+}
+.modal-window input,
+.modal-window select {
+  display: block;
+  min-height: 20px;
+  font-size: 15px;
+  padding: 10px;
+}
+.info-ad-flow section {
+  padding: 30px;
+}
+.modal .cancelBtn2 {
+  position: relative;
+  float: right;
+  top: -36px;
+  border-radius: 50%;
+  left: -10px;
+  border: 1px solid white;
+  color: white;
+  background-color: transparent;
+}
+.modal .edit-ad-flow .cancelBtn2 {
+  left: 10px;
+  top: -60px;
+}
+.modal, .edit-ad-flow, .info-ad-flow { display: none; }
+body.show-info-ad-flow .info-ad-flow { display: initial; }
+body.show-info-ad-flow .modal { display: flex; }
+body.show-edit-ad-flow .edit-ad-flow { display: initial; }
+body.show-edit-ad-flow .modal { display: flex; }
+
