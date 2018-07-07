@@ -2,8 +2,8 @@ const crypto = require('crypto');
 const request = require('request');
 const debug = require('debug')('webmaster-tools:fb');
 
-const CLIENT_ID = '1948258332120118';
-const CLIENT_SECRET = 'cd1c95cbe42d3c6935515435aa263d4b'
+const CLIENT_ID = process.env.FB_APP_ID;
+const CLIENT_SECRET = process.env.FB_APP_SECRET;
 const FB_ENDPOINT = 'https://graph.facebook.com/v3.0/';
 
 class FB {
