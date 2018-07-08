@@ -1,0 +1,95 @@
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+.cards > .radiogroup {
+  cursor: pointer;
+}
+.cards > .radiogroup li {
+  list-style: none;
+  border-color: black;
+}
+.cards > .radiogroup .footer li {
+  color: #00B7FF;
+}
+.cards > .radiogroup .footer li:hover {
+  box-shadow: 0px 0px 3px;
+}
+.cards > .radiogroup .footer a {
+  text-decoration: none;
+}
+.cards > input[type="radio"]:checked+.radiogroup {
+  border-color: darkcyan;
+}
+.cards > input.hidden {
+  display: none;
+}
+.cards > .radiogroup {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  width: 30%;
+  margin: 10px 1%;
+  min-width: 150px;
+  cursor: pointer;
+  word-wrap: break-word;
+}
+.cards article {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  margin: 10px;
+  flex: 0 0 auto;
+      width: 200px;
+    min-height: 200px;
+}
+.cards .head {
+  background-color: darkcyan;
+  margin: 0;
+  color: white;
+  padding: 10px;
+}
+.cards .body {
+  padding: 10px;
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+.cards .body li {
+  list-style: none;
+  border-color: black;
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+  padding: 10px;
+}
+.cards .body input {
+  text-overflow: ellipsis;
+}
+.cards .body button {
+  margin: 10px;
+  flex: 1 1 auto;
+  background-color: transparent;
+  border: 1px solid darkcyan;
+  cursor: pointer;
+  font-size: x-large;
+}
+.cards .footer {
+  display: flex;
+  padding: 0;
+}
+.cards .footer > * {
+  flex: 1 1 auto;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid;
+  margin: 5px;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 2px;
+  line-height: 2;
+  padding: 0;
+}

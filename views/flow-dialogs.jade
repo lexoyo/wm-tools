@@ -1,9 +1,12 @@
 #flowInfoDialogEl.info-ad-flow.modal-window
-  h2 Link this Ad Flow with an RSS feed
+  h2 Link Ad Flow to RSS feed
   button.cancelBtn2.cancelBtn X
   section
     h3 Here is the URL of your flow:
-    input.urlInput(readonly, type="text")
+    .flow-url-container
+      input.urlInput(readonly, type="text")
+      button.copy Copy
+    .code.debug
   section.help-message
     h3 What to do with this URL:
     p <strong>Short anser</strong>: create an applet in IFTTT to link an RSS feed with your new Ad Flow. After that, when there is a new element in the RSS feed, I will create an Ad for you.
@@ -22,7 +25,8 @@
       li Leave "Method" and "Content type" and "Body" alone
       li Click on "Create action" and then "Finish"
       li Wait for ads to be created <a href="https://www.facebook.com/adsmanager/manage/ads">in Facebook Ads Manager</a> when new items arrive.
-  button.cancelBtn Close
+  section
+    button.cancelBtn1.cancelBtn Close
 
 .edit-ad-flow.modal-window.no-error
   h2 Edit Ad Flow

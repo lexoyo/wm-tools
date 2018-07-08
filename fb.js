@@ -1,11 +1,14 @@
 const crypto = require('crypto');
 const request = require('request');
 const assert = require('assert');
+const config = require('./public/config.json');
 const debug = require('debug')('webmaster-tools:fb');
 
 const CLIENT_ID = process.env.FB_APP_ID;
 const CLIENT_SECRET = process.env.FB_APP_SECRET;
 const FB_ENDPOINT = 'https://graph.facebook.com/v3.0/';
+
+const AD_SET_FIELDS = config.fbFields.adSets.map(field => field.name).join(',');
 
 assert(CLIENT_ID, 'missing env var CLIENT_ID');
 assert(CLIENT_SECRET, 'missing env var CLIENT_SECRET');
@@ -64,7 +67,7 @@ class FB {
     });
   }
   static getAdSets(accessToken, proof, campaignId) {
-    return FB.get(accessToken, proof, 'name,configured_status,effective_status', {
+    return FB.get(accessToken, proof, AD_SET_FIELDS, {
       url: `/${ campaignId }/adsets/`,
     });
   }

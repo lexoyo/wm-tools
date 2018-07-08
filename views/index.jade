@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  script(src='./javascripts/utils.js')
   script(src='./javascripts/api.js')
   script(src='./javascripts/templates.js')
   script(src='./javascripts/dashboard.js')
@@ -46,7 +47,7 @@ block content
     a(name="flows")
     fieldset.hasAdSet
       legend Manage your ad flows
-      form#flowsEl(name="flows")
+      form#flowsEl.cards(name="flows")
       .empty-message Click "+" to create your first Ad Flow
     button#createFlowEl.round-button.hasAdSet(title="Add an ad flow") +
   section.modal

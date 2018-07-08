@@ -44,27 +44,6 @@ body.debug .debug {
   color: white;
   cursor: pointer;
 }
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 10px;
-}
-.cards > .radiogroup:hover {
-  cursor: pointer;
-  box-shadow: 0px 0px 3px;
-}
-.cards > .radiogroup ul {
-  padding: 0;
-}
-.cards > .radiogroup li {
-  list-style: none;
-}
-.cards > input[type="radio"]:checked+.radiogroup {
-  border-color: darkcyan;
-}
-.cards > input.hidden {
-  display: none;
-}
 .auth .cards > input[type="radio"]:checked+.radiogroup {
   font-weight: bold;
   color: white;
@@ -82,15 +61,6 @@ body.debug .debug {
   width: 100%;
   min-width: inherit;
   border: none;
-}
-.cards > .radiogroup {
-  border: 1px solid black;
-  width: 25%;
-  margin: 10px 1%;
-  padding: 20px 3%;
-  min-width: 150px;
-  cursor: pointer;
-  word-wrap: break-word;
 }
 .auth {
   position: absolute;

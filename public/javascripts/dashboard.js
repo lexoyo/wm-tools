@@ -4,6 +4,16 @@ window.Dashboard = {
     this.debug = window.location.search.indexOf('debug') > 0;
     if(this.debug) document.body.classList.add('debug');
     console.log('Dashboard init', this.debug);
+    // load config
+    $.ajax({
+      url: './config.json',
+      success: response => this.configLoaded(response),
+      error: response => this.error('Could not load config', response),
+    });
+  },
+  configLoaded(config) {
+    console.log('configLoaded', config);
+    window.config = config;
     this.errorEl = document.querySelector('#errorEl');
     this.userEl = document.querySelector('#userEl');
     this.adAccountsEl = document.querySelector('#adAccountsEl');
@@ -171,7 +181,7 @@ window.Dashboard = {
         success: response => {
           this.adSets = response.data;
           console.log('ad sets', this.adSets);
-          this.adSetsEl.innerHTML = Templates.getAdSetsList(this.adSets);
+          this.adSetsEl.innerHTML = Templates.getAdSetsList(this.getAdAccount(), this.adSets);
           this.setLoading(false);
           this.refreshAds();
           document.location.hash = '';

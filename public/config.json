@@ -1,0 +1,5 @@
+{
+  "fbFields": {
+    "adSets": [{"name": "status", "displayName": "Status"}, {"name": "name", "displayName": "Name"}, {"name": "bid_strategy", "displayName": "Bid Strategy"}, {"name": "billing_event", "displayName": "Billing Event"}, {"name": "budget_remaining", "displayName": "Budget Remaining"}, {"name": "daily_budget", "displayName": "Daily Budget"}, {"name": "daily_min_spend_target", "displayName": "Daily Min Spend Target"}, {"name": "daily_spend_cap", "displayName": "Daily Spend Cap"}, {"name": "destination_type", "displayName": "Destination Type"}, {"name": "end_time", "displayName": "End Time"}, {"name": "frequency_control_specs", "displayName": "Frequency Control Specs"}, {"name": "lifetime_budget", "displayName": "Lifetime Budget"}, {"name": "lifetime_imps", "displayName": "Lifetime Imps"}, {"name": "lifetime_spend_cap", "displayName": "Lifetime Spend Cap"}, {"name": "optimization_goal", "displayName": "Optimization Goal"}]
+  }
+}

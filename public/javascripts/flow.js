@@ -48,6 +48,10 @@ window.Flow = {
     const flowInfoDialogEl = document.body.querySelector('#flowInfoDialogEl');
     const urlInput = flowInfoDialogEl.querySelector('.urlInput');
     urlInput.value = `${ window.location.origin }/webhooks?webhookToken=${ flow.webhookToken }&flowId=${ flow._id }&url=`;
+    const copyInput = flowInfoDialogEl.querySelector('.copy');
+    Utils.copyBtn(copyInput, urlInput);
+    const codeInput = flowInfoDialogEl.querySelector('.code');
+    codeInput.innerHTML = JSON.stringify(flow);
     const cancelBtns = flowInfoDialogEl.querySelectorAll('.cancelBtn');
     for(let i=0; i<cancelBtns.length; i++) {
       const cancelBtn = cancelBtns[i];

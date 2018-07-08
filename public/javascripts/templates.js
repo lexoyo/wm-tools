@@ -1,5 +1,5 @@
 window.Templates = {
-  getUserInfo(user) {
+  getUserInfo: function(user) {
     return `
       <section id="user_${user.id}">
         <img src="${ user.picture.data.url }" />
@@ -20,18 +20,33 @@ window.Templates = {
     return adCampaigns.map((adCampaign, idx) => `
       <input class="hidden" value="${ adCampaign.id }" type="radio" id="id_${ adCampaign.id }" name="campaign" />
       <label class="radiogroup" for="id_${ adCampaign.id }">
-        <h3>${ adCampaign.name }</h3>
-        <ul>
+        <h4 class="head">${ adCampaign.name }</h4 class="head">
+        <ul class="body">
           <li>Objective: ${ adCampaign.objective }</li><li>Status: ${ adCampaign.status }</li>
-          <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ adAccount.id }&selected_campaign_ids=${ adCampaign.id }">Edit</a>
+        </ul>
+        <ul class="footer">
+          <li>Select</li>
+          <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/campaigns/edit?act=${ Utils.removePrefix(adAccount.id) }&selected_campaign_ids=${ adCampaign.id }">Edit</a></li>
         </ul>
       </label>
     `).join('');
   },
-  getAdSetsList: function(adSets) {
+  getAdSetsList: function(adAccount, adSets) {
     return adSets.map((adSet, idx) => `
       <input class="hidden" value="${ adSet.id }" type="radio" id="id_${ adSet.id }" name="set" />
-      <label class="radiogroup" for="id_${ adSet.id }">${ adSet.name }</label>
+      <label class="radiogroup" for="id_${ adSet.id }">
+        <h4 class="head">${ adSet.name }</h4 class="head">
+        <ul class="body">
+          <li>${ window.config.fbFields.adSets
+            .filter(field => !!adSet[field.name] && adSet[field.name].toString().toLowerCase() != 'undefined')
+            .map(field => `${field.displayName}: ${typeof(adSet[field.name])==='object'?JSON.stringify(adSet[field.name]):adSet[field.name]}`).join('</li><li>') }
+          </li>
+        </ul>
+        <ul class="footer">
+          <li>Select</li>
+          <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ Utils.removePrefix(adAccount.id) }&selected_adset_ids=${ adSet.id }">Edit</a></li>
+        </ul>
+      </label>
     `).join('');
   },
   getAdsList: function(ads) {
@@ -47,15 +62,12 @@ window.Templates = {
   getFlowsList: function(flows) {
     return flows.map(flow => {
       const webhookUrl = `${ window.location.origin }/webhooks?webhookToken=${ flow.webhookToken }&flowId=${ flow._id }&url=`;
+          //<input readonly type="text" value="${ webhookUrl }"/>
       return `
       <article>
         <h4 class="head">${ flow.name }</h4>
         <div class="body">
-          <input readonly type="text" value="${ webhookUrl }"/>
-          <button data-open-flow-id="${ flow._id }">Open this flow</button>
-          <div class="code debug">
-            ${ JSON.stringify(flow) }
-          </div>
+          <button data-open-flow-id="${ flow._id }">Link It !</button>
         </div>
         <div class="footer">
           <a target="_blank" href="${ webhookUrl }https://www.silex.me">Test</a>
@@ -70,22 +82,26 @@ window.Templates = {
       Current Ad Account: 
       <ul>
         <li>${ adAccount.business_name } (${ adAccount.name })</li><li>Spent since ${ adAccount.created_time }: ${ adAccount.amount_spent }${ adAccount.currency }</li>
-        <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ adAccount.id }&selected_campaign_ids=${ adCampaign.id }">Edit</a></li>
+        <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ Utils.removePrefix(adAccount.id) }&selected_campaign_ids=${ adCampaign.id }">Edit</a></li>
+        <div class="code">${ JSON.stringify(adAccount) }</div>
       </ul>
       Current Ad Campaign:
       <ul>
         <li>${ adCampaign.name }</li><li>Objective: ${ adCampaign.objective }</li><li>Status: ${ adCampaign.status }</li>
-        <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ adAccount.id }&selected_campaign_ids=${ adCampaign.id }">Edit</a>
+        <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ Utils.removePrefix(adAccount.id) }&selected_campaign_ids=${ adCampaign.id }">Edit</a>
+        <div class="code">${ JSON.stringify(adCampaign) }</div>
       </ul>
       Current Ad Set:
       <ul>
-        <li>${ adSet.name }</li><li>Status: ${ adSet.effective_status }</li>
-        <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ adAccount.id }&selected_adset_ids=${ adSet.id }">Edit</a></li>
+        <li>${ adSet.name }</li><li>Status: ${ adSet.status }</li>
+        <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ Utils.removePrefix(adAccount.id) }&selected_adset_ids=${ adSet.id }">Edit</a></li>
+        <div class="code">${ JSON.stringify(adSet) }</div>
       </ul>
       Ads in this selection:
       <ul>
         <li>${ ads.length } ads</li>
-        <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ adAccount.id }&selected_campaign_ids=${ adCampaign.id }&selected_adset_ids=${ adSet.id }">View in Facebook Ads Manager</a></li>
+        <li><a target="_blank" href="https://www.facebook.com/adsmanager/manage/adsets/edit?act=${ Utils.removePrefix(adAccount.id) }&selected_campaign_ids=${ adCampaign.id }&selected_adset_ids=${ adSet.id }">View in Facebook Ads Manager</a></li>
+        <div class="code">${ JSON.stringify(ads) }</div>
       </ul>
     `;
   },
