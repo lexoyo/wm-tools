@@ -1,0 +1,12 @@
+@media screen and (max-width: 540px) {
+  body {font-size: 16px;}
+  a[name] {height: 10px;}
+  .cards {padding: 0;}
+  .cards > .radiogroup {width: 45%;}
+  .cards > article {width: 45%;}
+}
+@media screen and (max-width: 365px) {
+  body {font-size: 18px;}
+  .cards > .radiogroup {width: 100%;}
+  .cards > article {width: 100%;}
+}

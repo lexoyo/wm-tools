@@ -1,6 +1,7 @@
 .cards {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   padding: 10px;
 }
 .cards > .radiogroup {

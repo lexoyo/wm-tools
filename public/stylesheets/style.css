@@ -1,27 +1,39 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   margin: 0;
-}
-body > section {
-  max-width: 850px;
-  margin: auto;
-  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100vh;
 }
 header {
   background-color: darkcyan;
-  height: 35px;
+  height: 40px;
   padding: 10px;
   color: white;
-  position: fixed;
   width: 100%;
-  top: 0;
+  flex: 0 0 auto;
+}
+.content {
+  flex: 1 1 auto;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.content-footer {
+  text-align: center;
+  margin-bottom: 80vh;
+}
+footer {
+  flex: 0 0 auto;
+  text-align: center;
+}
+.content > section {
+  margin-top: 100px;
+  max-width: 850px;
+  margin: auto;
 }
 h1 {
   margin: 0;
-}
-footer {
-  text-align: center;
-  margin-bottom: 80vh;
 }
 a[name] {
   display: block;
@@ -43,6 +55,12 @@ body.debug .debug {
   background-color: darkcyan;
   color: white;
   cursor: pointer;
+}
+legend {
+  font-size: x-large;
+}
+legend a {
+  font-size: small;
 }
 .auth .cards > input[type="radio"]:checked+.radiogroup {
   font-weight: bold;
