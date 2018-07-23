@@ -55,5 +55,8 @@ window.fbAsyncInit = function() {
    if (d.getElementById(id)) {return;}
    js = d.createElement(s); js.id = id;
    js.src = "https://connect.facebook.net/en_US/sdk.js";
+   js.onerror = function(e) {
+     alert('An error occured, could not load Facebook SDK. You may have a tracking protection enabled.');
+   }
    fjs.parentNode.insertBefore(js, fjs);
  }(document, 'script', 'facebook-jssdk'));
